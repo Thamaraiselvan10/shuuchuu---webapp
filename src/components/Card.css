@@ -1,0 +1,72 @@
+/* Modern Minimal Card Styles */
+.card {
+    background-color: var(--card-bg, #252526);
+    border-radius: var(--radius-lg, 16px);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+    border-color: rgba(73, 136, 196, 0.2);
+}
+
+.card-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color, #e0e0e0);
+}
+
+.card-body {
+    padding: 24px;
+}
+
+/* Elevated Card Variant */
+.card-elevated {
+    background: var(--card-elevated, #2d2d30);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Interactive Card */
+.card-interactive {
+    cursor: pointer;
+}
+
+.card-interactive:hover {
+    border-color: var(--primary-color, #4988C4);
+}
+
+.card-interactive:active {
+    transform: translateY(0) scale(0.99);
+}
+
+/* Light Mode */
+[data-theme='light'] .card {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='light'] .card:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    border-color: rgba(73, 136, 196, 0.3);
+}
+
+[data-theme='light'] .card-header {
+    border-bottom-color: rgba(0, 0, 0, 0.04);
+    background: rgba(0, 0, 0, 0.01);
+}
+
+[data-theme='light'] .card-elevated {
+    background: #f8f9fa;
+}

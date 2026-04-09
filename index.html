@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shuuchuu</title>
+    <meta name="description"
+        content="Shuuchuu is a focused productivity application designed to help you organize tasks, build habits, and master your time with focus timers and wellness insights.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Monoton&display=swap"
+        rel="stylesheet">
+    <style>
+        html {
+            background-color: #1e1e1e;
+        }
+
+        html[data-theme='light'] {
+            background-color: #f8f9fa;
+        }
+    </style>
+    <script>
+        (function () {
+            var theme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>

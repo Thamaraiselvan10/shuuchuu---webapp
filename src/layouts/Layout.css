@@ -1,0 +1,247 @@
+.layout {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 250px;
+    min-width: 250px;
+    height: 100vh;
+    background-color: var(--sidebar-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    transition: width 0.25s ease, min-width 0.25s ease, padding 0.25s ease, opacity 0.25s ease;
+    overflow: hidden;
+    white-space: nowrap;
+    z-index: 200;
+    flex-shrink: 0;
+}
+
+.sidebar.closed {
+    width: 0;
+    min-width: 0;
+    padding: 0;
+    opacity: 0;
+    border-right: none;
+}
+
+/* Pinned sidebar has no special styling */
+
+/* Edge trigger indicator - only show when sidebar is closed */
+.sidebar-edge-trigger {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 60px;
+    background: linear-gradient(to right, rgba(var(--primary-rgb), 0.4), transparent);
+    border-radius: 0 6px 6px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 199;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.sidebar-edge-trigger:hover {
+    width: 12px;
+    background: linear-gradient(to right, rgba(var(--primary-rgb), 0.7), transparent);
+}
+
+.sidebar-edge-trigger span {
+    color: var(--primary-color);
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.sidebar-edge-trigger:hover span {
+    opacity: 1;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 30px;
+    color: var(--primary-color);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    letter-spacing: 2px;
+    font-family: 'Monoton', cursive;
+    font-weight: 400;
+    /* Monoton only supports 400 */
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    text-decoration: none;
+    color: var(--text-color);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    /* Ensure nav items don't break layout during transition */
+}
+
+.nav-item svg {
+    flex-shrink: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.nav-item:hover svg,
+.nav-item.active svg {
+    opacity: 1;
+}
+
+.nav-item:hover {
+    background-color: var(--nav-hover-bg);
+    transform: translateX(5px);
+}
+
+.nav-item.active {
+    background: linear-gradient(to right, rgba(73, 136, 196, 0.12), transparent);
+    color: #4988C4;
+    border-left: 3px solid #4988C4;
+    padding-left: 12px;
+    border-radius: 4px 12px 12px 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.nav-badge {
+    background: rgba(139, 92, 246, 0.15);
+    color: var(--primary-color);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-left: auto;
+    transition: all 0.2s;
+}
+
+.nav-item.active .nav-badge {
+    background: var(--primary-color);
+    color: white;
+}
+
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: transparent;
+    /* Allow body gradient to show */
+    transition: margin-left 0.3s ease;
+    /* If we were using absolute positioning, but we're using flex so this is less critical, but good for smoothness if logic changes */
+}
+
+.header {
+    height: 70px;
+    background-color: var(--header-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    justify-content: space-between;
+    position: relative;
+    z-index: 50;
+}
+
+.header h2 {
+    margin: 0;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.header h2 .pending-badge {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--primary-color);
+    opacity: 0.9;
+}
+
+.page-content {
+    flex: 1;
+    padding: 20px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    transition: padding 0.3s ease;
+}
+
+/* Add extra padding when sidebar is closed for better centering/aesthetics */
+.sidebar.closed+.content .page-content {
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+/* Sidebar Toggle Button styling */
+.sidebar-toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: 15px;
+    padding: 5px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-toggle-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spin-animation {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes breathe {
+    0% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: scale(1.15);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+}
+
+.breath-animation {
+    animation: breathe 3.5s ease-in-out infinite;
+}

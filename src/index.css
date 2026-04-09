@@ -1,0 +1,229 @@
+:root {
+  /* Modern VS Code Dark Theme Palette */
+  --bg-gradient: #1e1e1e;
+  --text-color: #e0e0e0;
+  --text-muted: #9e9e9e;
+  --primary-color: #4988C4;
+  --secondary-color: #569cd6;
+  --accent-color: #4988C4;
+  --primary-rgb: 73, 136, 196;
+
+  --card-bg: #252526;
+  --card-elevated: #2d2d30;
+  --glass-border: 1px solid rgba(255, 255, 255, 0.06);
+  --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+
+  --input-bg: #3c3c3c;
+  --input-text: #e0e0e0;
+  --input-border: 1px solid rgba(255, 255, 255, 0.08);
+
+  /* Layout Variables */
+  --sidebar-bg: rgba(37, 37, 38, 0.95);
+  --header-bg: rgba(37, 37, 38, 0.95);
+  --border-color: rgba(255, 255, 255, 0.06);
+  --nav-hover-bg: rgba(73, 136, 196, 0.1);
+  --glass-panel-bg: rgba(0, 0, 0, 0.4);
+
+  /* Typography - Premium Font Stack */
+  --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-heading: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Consolas', monospace;
+
+  /* Modern Design Tokens */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --transition-fast: 0.15s ease;
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme='light'] {
+  --bg-gradient: #f8f9fa;
+  --text-color: #1a1a1a;
+  --text-muted: #6b7280;
+  --primary-color: #4988C4;
+  --secondary-color: #2563eb;
+  --accent-color: #4988C4;
+  --card-bg: #ffffff;
+  --card-elevated: #f3f4f6;
+  --glass-border: 1px solid rgba(0, 0, 0, 0.06);
+  --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --input-bg: #f3f4f6;
+  --input-text: #1a1a1a;
+  --input-border: 1px solid rgba(0, 0, 0, 0.08);
+
+  --sidebar-bg: rgba(255, 255, 255, 0.95);
+  --header-bg: rgba(255, 255, 255, 0.95);
+  --border-color: rgba(0, 0, 0, 0.06);
+  --nav-hover-bg: rgba(73, 136, 196, 0.08);
+  --glass-panel-bg: rgba(255, 255, 255, 0.6);
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-gradient);
+  color: var(--text-color);
+  min-height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  transition: background var(--transition-smooth), color var(--transition-smooth);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+/* Premium Heading Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Monospace for code elements */
+code,
+pre,
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* Allow text selection in specific elements */
+input,
+textarea,
+[contenteditable="true"],
+.selectable {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Modern Glass Panel */
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-smooth);
+}
+
+/* Modern Input Styles */
+input,
+textarea,
+select {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: var(--input-border);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  font-weight: 400;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+input:hover,
+textarea:hover,
+select:hover {
+  border-color: rgba(73, 136, 196, 0.3);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(73, 136, 196, 0.15);
+}
+
+/* Select/Dropdown specific */
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239e9e9e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+select option {
+  background: var(--card-bg);
+  color: var(--text-color);
+  padding: 10px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(73, 136, 196, 0.4);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+/* Focus states */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.nav-item:focus:not(:focus-visible) {
+  outline: none;
+}

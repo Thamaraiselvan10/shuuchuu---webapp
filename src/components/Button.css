@@ -1,0 +1,105 @@
+/* Modern Minimal Button Styles */
+.btn {
+    padding: 10px 20px;
+    border-radius: var(--radius-md, 12px);
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: inherit;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:active {
+    transform: scale(0.97);
+}
+
+/* Primary Button - Accent Blue */
+.btn-primary {
+    background: linear-gradient(135deg, #4988C4 0%, #3a7ab8 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(73, 136, 196, 0.25);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #5a9ad4 0%, #4988C4 100%);
+    box-shadow: 0 4px 16px rgba(73, 136, 196, 0.35);
+    transform: translateY(-1px);
+}
+
+/* Secondary Button - Subtle Gray */
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-color, #e0e0e0);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Danger Button */
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.25);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #e74c5c 0%, #dc3545 100%);
+    box-shadow: 0 4px 16px rgba(220, 53, 69, 0.35);
+    transform: translateY(-1px);
+}
+
+/* Ghost Button */
+.btn-ghost {
+    background: transparent;
+    color: var(--text-color, #e0e0e0);
+    border: none;
+}
+
+.btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* Icon Button */
+.btn-icon {
+    padding: 10px;
+    border-radius: var(--radius-md, 12px);
+    min-width: 40px;
+    min-height: 40px;
+}
+
+/* Disabled state */
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Light mode adjustments */
+[data-theme='light'] .btn-secondary {
+    background: rgba(0, 0, 0, 0.04);
+    color: #1a1a1a;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='light'] .btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme='light'] .btn-ghost {
+    color: #1a1a1a;
+}
+
+[data-theme='light'] .btn-ghost:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
