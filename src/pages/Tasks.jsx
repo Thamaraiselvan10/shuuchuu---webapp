@@ -9,7 +9,7 @@ import DesktopIcon from '../components/DesktopIcon';
 import TaskWindow from '../components/TaskWindow';
 import IconPicker from '../components/IconPicker';
 import { format } from 'date-fns';
-import { Timer, AlertCircle, ChevronRight, Plus, X } from 'lucide-react';
+import { Timer, AlertCircle, ChevronRight, Plus, X, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Tasks = () => {
@@ -344,10 +344,27 @@ const Tasks = () => {
             await deleteTask(itemToDelete);
             showToast('Task deleted', 'success');
         } else if (deleteType === 'category' && itemToDelete) {
-            setCategories(prev => prev.filter(c => c.name !== itemToDelete));
+            // 1. Reassign all tasks in this category to 'General'
+            const tasksToUpdate = tasks.filter(t => t.category === itemToDelete);
+            for (const t of tasksToUpdate) {
+                await updateTask(t.id, { category: 'General' });
+            }
+
+            // 2. Remove category from categories state
+            setCategories(prev => {
+                const updated = prev.filter(c => c.name !== itemToDelete);
+                localStorage.setItem('task_categories_v2', JSON.stringify(updated));
+                return updated;
+            });
+
+            // 3. Remove from pinned, open, minimized windows
+            setPinnedCategories(prev => prev.filter(c => c !== itemToDelete));
             closeWindow(itemToDelete);
             setMinimizedWindows(prev => prev.filter(n => n !== itemToDelete));
+
             showToast(`Category "${itemToDelete}" deleted`, 'success');
+            // 4. Redirect to main tasks page (close mobile category sheet)
+            setMobileCategoryOpen(null);
         }
         setIsDeleteModalOpen(false);
         setItemToDelete(null);
@@ -580,17 +597,34 @@ const Tasks = () => {
                     {/* Mobile Category Detail Sheet */}
                     {mobileCategoryOpen && (
                         <div className="mobile-category-sheet">
-                            <div className="mobile-sheet-header">
+
+                            <div className="mobile-sheet-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
                                 <button className="mobile-back-btn" onClick={() => setMobileCategoryOpen(null)}>
                                     <X size={20} />
                                 </button>
-                                <h2 className="mobile-sheet-title">
+                                <h2 className="mobile-sheet-title" style={{ flex: 1, textAlign: 'center', margin: 0 }}>
                                     {categories.find(c => c.name === mobileCategoryOpen)?.icon || '📌'} {mobileCategoryOpen}
                                 </h2>
                                 {mobileCategoryOpen !== "Today's Focus" && (
-                                    <button className="mobile-add-task-btn" onClick={() => openNewTaskModal(mobileCategoryOpen)}>
-                                        <Plus size={18} />
-                                    </button>
+                                    <>
+                                        <button className="mobile-add-task-btn" onClick={() => openNewTaskModal(mobileCategoryOpen)}>
+                                            <Plus size={18} />
+                                        </button>
+                                        <button
+                                            className="mobile-delete-category-btn"
+                                            style={{ marginLeft: 8, background: 'none', border: 'none', color: '#ff4444', padding: 4, borderRadius: 6, cursor: 'pointer' }}
+                                            title="Delete Category"
+                                            onClick={() => {
+                                                setItemToDelete(mobileCategoryOpen);
+                                                setDeleteType('category');
+                                                setIsDeleteModalOpen(true);
+                                            }}
+                                        >
+                                            <span style={{ display: 'flex', alignItems: 'center' }}>
+                                                <Trash2 size={18} />
+                                            </span>
+                                        </button>
+                                    </>
                                 )}
                             </div>
 

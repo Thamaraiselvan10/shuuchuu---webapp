@@ -575,9 +575,9 @@ const Dashboard = () => {
                 @media (max-width: 900px) {
                     .minimal-header { flex-direction: column; align-items: stretch; }
                     .mh-left { width: 100%; }
-                    .mh-center { justify-content: center; flex-wrap: wrap; }
+                    .mh-center { justify-content: center; flex-wrap: nowrap; }
                     .mh-right { justify-content: center; flex-wrap: wrap; }
-                    .mh-btn { flex: 1; justify-content: center; }
+                    .mh-btn { flex: 1; justify-content: center; min-width: 80px; }
                 }
 
                 /* Quick Actions Spacer */
@@ -1439,7 +1439,7 @@ const Dashboard = () => {
                         padding: 16px;
                         gap: 16px;
                         height: auto;
-                        padding-bottom: 120px; /* Increased to ensure scrolling past habits card */
+                        padding-bottom: 20px;
                     }
 
                     .command-center {
