@@ -244,7 +244,22 @@ const GoalModal = ({ isOpen, onClose, onSave, onDelete, initialData = null }) =>
                     display: flex;
                     justify-content: flex-end;
                 }
-                /* Dark mode overrides removed for theme consistency */
+
+                @media (max-width: 768px) {
+                    .form-row {
+                        flex-direction: column;
+                        gap: 10px;
+                    }
+
+                    .form-actions {
+                        flex-direction: column-reverse;
+                        gap: 12px;
+                    }
+
+                    .form-actions button {
+                        width: 100%;
+                    }
+                }
             `}</style>
         </Modal>
     );

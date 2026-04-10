@@ -227,3 +227,82 @@ select:focus-visible {
 .nav-item:focus:not(:focus-visible) {
   outline: none;
 }
+
+/* ==========================================
+   MOBILE RESPONSIVE FOUNDATION
+   ========================================== */
+
+@media (max-width: 768px) {
+  :root {
+    --touch-min: 44px;
+    --mobile-padding: 16px;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 18px;
+  }
+
+  body {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+  }
+
+  /* Touch-friendly inputs */
+  input,
+  textarea,
+  select {
+    min-height: var(--touch-min);
+    font-size: 16px; /* Prevents iOS zoom on focus */
+    padding: 10px 14px;
+  }
+
+  /* Touch-friendly buttons */
+  button {
+    min-height: var(--touch-min);
+  }
+
+  /* Hide scrollbar but keep scrolling */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    scrollbar-width: none;
+  }
+
+  /* Glass panel — full width on mobile */
+  .glass-panel {
+    border-radius: var(--radius-lg);
+  }
+
+  /* Modal overlay for mobile — slide up from bottom */
+  .modal-overlay {
+    align-items: flex-end !important;
+  }
+
+  .modal-overlay > div,
+  .modal-overlay > .glass-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 20px 20px 0 0 !important;
+    max-height: 90dvh;
+    overflow-y: auto;
+  }
+}

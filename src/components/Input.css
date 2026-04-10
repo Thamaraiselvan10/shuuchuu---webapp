@@ -122,3 +122,18 @@ textarea.input-field {
 [data-theme='light'] .input-field::placeholder {
     color: #9ca3af;
 }
+
+/* ===== Mobile Touch Targets ===== */
+@media (max-width: 768px) {
+    .input-field,
+    .anime-input,
+    .anime-select {
+        min-height: 44px;
+        font-size: 16px;
+        padding: 12px 16px;
+    }
+
+    textarea.input-field {
+        min-height: 100px;
+    }
+}

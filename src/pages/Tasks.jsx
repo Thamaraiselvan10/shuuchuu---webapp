@@ -9,11 +9,24 @@ import DesktopIcon from '../components/DesktopIcon';
 import TaskWindow from '../components/TaskWindow';
 import IconPicker from '../components/IconPicker';
 import { format } from 'date-fns';
-import { Timer, AlertCircle } from 'lucide-react';
+import { Timer, AlertCircle, ChevronRight, Plus, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Tasks = () => {
     const { tasks, addTask, deleteTask, toggleTaskStatus, updateTask, updateTaskStatus, updateTaskPriority } = useTasks();
     const { showToast } = useToast();
+    const navigate = useNavigate();
+
+    // Mobile state
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [mobileCategoryOpen, setMobileCategoryOpen] = useState(null);
+    const [mobileViewMode, setMobileViewMode] = useState('cards');
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     // Categories with icons
     const [categories, setCategories] = useState(() => {
@@ -474,8 +487,147 @@ const Tasks = () => {
         }
     };
 
+    // Mobile category tasks
+    const getMobileCategoryTasks = () => {
+        if (!mobileCategoryOpen) return [];
+        if (mobileCategoryOpen === "Today's Focus") {
+            return tasks.filter(t => t.is_today_focus === 1);
+        }
+        return getTasksForCategory(mobileCategoryOpen);
+    };
+
     return (
         <div className="desktop-container" ref={containerRef} onClick={() => setSelectedIcon(null)}>
+
+            {/* ===== MOBILE VIEW ===== */}
+            {isMobile ? (
+                <div className="mobile-tasks-container">
+                    {/* Mobile Stats Row */}
+                    <div className="mobile-stats-row">
+                        <div className="mobile-stat">
+                            <span className="mobile-stat-val">{tasks.filter(t => t.status === 'completed').length}</span>
+                            <span className="mobile-stat-lbl">Done</span>
+                        </div>
+                        <div className="mobile-stat">
+                            <span className="mobile-stat-val">{tasks.filter(t => t.status === 'pending').length}</span>
+                            <span className="mobile-stat-lbl">To Do</span>
+                        </div>
+                        <div className="mobile-stat">
+                            <span className="mobile-stat-val">{tasks.filter(t => t.status === 'progress').length}</span>
+                            <span className="mobile-stat-lbl">In Progress</span>
+                        </div>
+                        <div className="mobile-stat">
+                            <span className="mobile-stat-val">{tasks.filter(t => t.due_at && new Date(t.due_at) < new Date() && t.status !== 'completed').length}</span>
+                            <span className="mobile-stat-lbl">Overdue</span>
+                        </div>
+                    </div>
+
+                    {/* Mobile Quick Actions */}
+                    <div className="mobile-quick-actions">
+                        <button onClick={() => openNewTaskModal()} className="mobile-action-btn primary">
+                            <Plus size={16} /> New Task
+                        </button>
+                        <button onClick={() => setIsNewCategoryModalOpen(true)} className="mobile-action-btn">
+                            📁 Category
+                        </button>
+                        <button onClick={() => setIsEventModalOpen(true)} className="mobile-action-btn">
+                            📅 Event
+                        </button>
+                    </div>
+
+                    {/* Today's Focus Section */}
+                    {tasks.filter(t => t.is_today_focus === 1 && t.status !== 'completed').length > 0 && (
+                        <div className="mobile-category-item mobile-focus-section" onClick={() => setMobileCategoryOpen("Today's Focus")}>
+                            <div className="mobile-cat-left">
+                                <span className="mobile-cat-icon">📌</span>
+                                <span className="mobile-cat-name">Today's Focus</span>
+                            </div>
+                            <div className="mobile-cat-right">
+                                <span className="mobile-cat-count">{tasks.filter(t => t.is_today_focus === 1 && t.status !== 'completed').length}</span>
+                                <ChevronRight size={18} />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Category List */}
+                    <div className="mobile-section-label">Categories</div>
+                    <div className="mobile-category-list">
+                        {categories.map(cat => {
+                            const count = getTaskCount(cat.name);
+                            const total = getTasksForCategory(cat.name).length;
+                            return (
+                                <div
+                                    key={cat.name}
+                                    className="mobile-category-item"
+                                    onClick={() => setMobileCategoryOpen(cat.name)}
+                                >
+                                    <div className="mobile-cat-left">
+                                        <span className="mobile-cat-icon">{cat.icon}</span>
+                                        <div className="mobile-cat-info">
+                                            <span className="mobile-cat-name">{cat.name}</span>
+                                            <span className="mobile-cat-total">{total} task{total !== 1 ? 's' : ''}</span>
+                                        </div>
+                                    </div>
+                                    <div className="mobile-cat-right">
+                                        {count > 0 && <span className="mobile-cat-count">{count}</span>}
+                                        <ChevronRight size={18} />
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* Mobile Category Detail Sheet */}
+                    {mobileCategoryOpen && (
+                        <div className="mobile-category-sheet">
+                            <div className="mobile-sheet-header">
+                                <button className="mobile-back-btn" onClick={() => setMobileCategoryOpen(null)}>
+                                    <X size={20} />
+                                </button>
+                                <h2 className="mobile-sheet-title">
+                                    {categories.find(c => c.name === mobileCategoryOpen)?.icon || '📌'} {mobileCategoryOpen}
+                                </h2>
+                                {mobileCategoryOpen !== "Today's Focus" && (
+                                    <button className="mobile-add-task-btn" onClick={() => openNewTaskModal(mobileCategoryOpen)}>
+                                        <Plus size={18} />
+                                    </button>
+                                )}
+                            </div>
+
+                            <div className="mobile-sheet-content">
+                                <TaskWindow
+                                    id={mobileCategoryOpen}
+                                    title={mobileCategoryOpen}
+                                    icon={categories.find(c => c.name === mobileCategoryOpen)?.icon || '📌'}
+                                    tasks={getMobileCategoryTasks()}
+                                    allowAddTask={mobileCategoryOpen !== "Today's Focus"}
+                                    showCategory={mobileCategoryOpen === "Today's Focus"}
+                                    isMinimized={false}
+                                    isMaximized={true}
+                                    position={{ x: 0, y: 0 }}
+                                    size={{ width: '100%', height: '100%' }}
+                                    zIndex={1}
+                                    onClose={() => setMobileCategoryOpen(null)}
+                                    onMinimize={() => {}}
+                                    onMaximize={() => {}}
+                                    onFocus={() => {}}
+                                    onPositionChange={() => {}}
+                                    onSizeChange={() => {}}
+                                    onTaskToggle={toggleTaskStatus}
+                                    onTaskDelete={deleteTask}
+                                    onTaskStatusChange={updateTaskStatus}
+                                    onTaskPriorityChange={updateTaskPriority}
+                                    onAddTask={() => openNewTaskModal(mobileCategoryOpen)}
+                                    onTaskContextMenu={handleTaskContextMenu}
+                                    isBlurred={false}
+                                    onToggleBlur={() => {}}
+                                />
+                            </div>
+                        </div>
+                    )}
+                </div>
+            ) : (
+            <>
             {/* Desktop Background Grid Pattern */}
             <div className="desktop-background"></div>
 
@@ -829,6 +981,9 @@ const Tasks = () => {
                     <span>+</span>
                 </button>
             </div>
+
+            </>
+            )}
 
             {/* Context Menu */}
             {contextMenu && (
@@ -1231,7 +1386,7 @@ const Tasks = () => {
                             const isPinned = pinnedCategories.includes(cat.name);
                             return (
                                 <button
-                                    key={cat.id}
+                                    key={cat.name}
                                     onClick={() => toggleCategoryPin(cat.name)}
                                     style={{
                                         display: 'flex',
@@ -1826,6 +1981,297 @@ const Tasks = () => {
                 /* Fix for date input in dark mode */
                 input[type="datetime-local"] {
                     color-scheme: dark;
+                }
+
+                /* ===== MOBILE TASKS STYLES ===== */
+                .mobile-tasks-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 14px;
+                    padding: 16px;
+                    height: 100%;
+                    overflow-y: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+
+                .mobile-stats-row {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 8px;
+                }
+
+                .mobile-stat {
+                    background: var(--card-bg);
+                    border: 1px solid var(--border-color);
+                    border-radius: 12px;
+                    padding: 12px 8px;
+                    text-align: center;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 2px;
+                }
+
+                .mobile-stat-val {
+                    font-size: 1.3rem;
+                    font-weight: 800;
+                    color: var(--text-color);
+                }
+
+                .mobile-stat-lbl {
+                    font-size: 0.65rem;
+                    color: var(--text-muted);
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    font-weight: 600;
+                }
+
+                .mobile-quick-actions {
+                    display: flex;
+                    gap: 8px;
+                }
+
+                .mobile-action-btn {
+                    flex: 1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 6px;
+                    padding: 12px 10px;
+                    border-radius: 10px;
+                    border: 1px solid var(--border-color);
+                    background: var(--card-bg);
+                    color: var(--text-color);
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.15s;
+                }
+
+                .mobile-action-btn.primary {
+                    background: var(--primary-color);
+                    color: white;
+                    border-color: var(--primary-color);
+                }
+
+                .mobile-action-btn:active {
+                    transform: scale(0.97);
+                }
+
+                .mobile-section-label {
+                    font-size: 0.7rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.8px;
+                    color: var(--text-muted);
+                    font-weight: 700;
+                    margin-top: 4px;
+                }
+
+                .mobile-category-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                }
+
+                .mobile-category-item {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 14px 16px;
+                    background: var(--card-bg);
+                    border: 1px solid var(--border-color);
+                    border-radius: 14px;
+                    cursor: pointer;
+                    transition: all 0.15s ease;
+                }
+
+                .mobile-category-item:active {
+                    transform: scale(0.98);
+                    background: var(--card-elevated);
+                }
+
+                .mobile-focus-section {
+                    background: linear-gradient(135deg, rgba(73, 136, 196, 0.15), rgba(52, 152, 219, 0.08));
+                    border-color: rgba(73, 136, 196, 0.25);
+                }
+
+                .mobile-cat-left {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
+
+                .mobile-cat-icon {
+                    font-size: 1.4rem;
+                    width: 36px;
+                    text-align: center;
+                }
+
+                .mobile-cat-info {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .mobile-cat-name {
+                    font-weight: 600;
+                    font-size: 0.95rem;
+                    color: var(--text-color);
+                }
+
+                .mobile-cat-total {
+                    font-size: 0.75rem;
+                    color: var(--text-muted);
+                }
+
+                .mobile-cat-right {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: var(--text-muted);
+                }
+
+                .mobile-cat-count {
+                    background: var(--primary-color);
+                    color: white;
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                    min-width: 22px;
+                    height: 22px;
+                    border-radius: 11px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0 6px;
+                }
+
+                /* Mobile Category Detail Sheet */
+                .mobile-category-sheet {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: var(--bg-gradient);
+                    z-index: 9998;
+                    display: flex;
+                    flex-direction: column;
+                    animation: slideInRight 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+                }
+
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); }
+                    to { transform: translateX(0); }
+                }
+
+                .mobile-sheet-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 16px;
+                    border-bottom: 1px solid var(--border-color);
+                    background: var(--card-bg);
+                }
+
+                .mobile-back-btn {
+                    background: none;
+                    border: none;
+                    color: var(--text-color);
+                    padding: 8px;
+                    cursor: pointer;
+                    border-radius: 8px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .mobile-back-btn:active {
+                    background: var(--nav-hover-bg);
+                }
+
+                .mobile-sheet-title {
+                    flex: 1;
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                    color: var(--text-color);
+                    margin: 0;
+                }
+
+                .mobile-add-task-btn {
+                    background: var(--primary-color);
+                    border: none;
+                    color: white;
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .mobile-view-pills {
+                    display: flex;
+                    gap: 6px;
+                    padding: 12px 16px;
+                    overflow-x: auto;
+                }
+
+                .mobile-view-pill {
+                    padding: 8px 16px;
+                    border-radius: 20px;
+                    border: 1px solid var(--border-color);
+                    background: transparent;
+                    color: var(--text-muted);
+                    font-size: 0.78rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    white-space: nowrap;
+                    transition: all 0.15s;
+                }
+
+                .mobile-view-pill.active {
+                    background: var(--primary-color);
+                    color: white;
+                    border-color: var(--primary-color);
+                }
+
+                .mobile-sheet-content {
+                    flex: 1;
+                    overflow-y: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+
+                /* Override TaskWindow for mobile embedded mode */
+                .mobile-sheet-content .task-window {
+                    position: relative !important;
+                    top: auto !important;
+                    left: auto !important;
+                    width: 100% !important;
+                    height: 100% !important;
+                    border-radius: 0 !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                    background: transparent !important;
+                    backdrop-filter: none !important;
+                }
+
+                .mobile-sheet-content .window-header {
+                    display: none !important;
+                }
+
+                .mobile-sheet-content .window-resize-handle {
+                    display: none !important;
+                }
+
+                .mobile-sheet-content .kanban-view {
+                    display: flex !important;
+                    overflow-x: auto;
+                    gap: 12px;
+                    padding-bottom: 16px;
+                }
+
+                .mobile-sheet-content .kanban-column {
+                    min-width: 80vw;
+                    flex-shrink: 0;
                 }
             `}</style>
         </div>

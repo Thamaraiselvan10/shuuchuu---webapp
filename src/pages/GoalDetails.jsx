@@ -1354,6 +1354,58 @@ const GoalDetails = () => {
                     font-size: 1.1rem;
                     font-style: italic;
                 }
+
+                @media (max-width: 768px) {
+                    .goal-details-container {
+                        padding: 16px;
+                        margin-bottom: 24px;
+                    }
+
+                    .header-top {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 16px;
+                    }
+
+                    .header-top > div {
+                        width: 100%;
+                    }
+
+                    .edit-goal-btn {
+                        width: 100%;
+                    }
+
+                    .goal-meta-row {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 8px;
+                    }
+
+                    .roadmap-header {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 16px;
+                    }
+
+                    .add-phase-btn {
+                        width: 100%;
+                    }
+
+                    .phases-grid {
+                        grid-template-columns: 1fr;
+                        gap: 12px;
+                    }
+
+                    .phase-grid-card {
+                        padding: 16px;
+                    }
+
+                    .phase-action-btns {
+                        width: 100%;
+                        justify-content: flex-end;
+                        margin-top: 12px;
+                    }
+                }
             `}</style>
         </div >
     );

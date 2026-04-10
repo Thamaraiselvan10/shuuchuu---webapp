@@ -1701,12 +1701,100 @@ const Dashboard = () => {
                     .focus-score-card { width: 100%; justify-content: center; }
                 }
 
-                @media (max-width: 600px) {
-                    .dashboard-hub { padding: 16px; }
-                    .bento-grid { grid-template-columns: 1fr; }
-                    .bento-lg, .bento-md, .bento-sm, .bento-wide { grid-column: span 1; }
-                    .quick-actions { flex-direction: column; }
-                    .action-btn { width: 100%; justify-content: center; }
+                @media (max-width: 768px) {
+                    .dashboard-hub {
+                        padding: 16px;
+                        gap: 16px;
+                        height: auto;
+                        padding-bottom: 24px;
+                    }
+
+                    .command-center {
+                        flex-direction: column;
+                        gap: 16px;
+                        padding: 20px 16px;
+                        border-radius: 16px;
+                        align-items: stretch;
+                    }
+
+                    .command-left {
+                        gap: 10px;
+                    }
+
+                    .greeting-text h1 {
+                        font-size: 1.3rem;
+                    }
+
+                    .command-center-goal {
+                        align-self: center;
+                    }
+
+                    .goal-ring svg {
+                        width: 72px;
+                        height: 72px;
+                    }
+
+                    .command-right {
+                        width: 100%;
+                        flex-direction: row;
+                        gap: 10px;
+                    }
+
+                    .focus-score-card {
+                        flex: 1;
+                        padding: 12px;
+                        border-radius: 12px;
+                    }
+
+                    .quick-actions {
+                        display: flex;
+                        overflow-x: auto;
+                        gap: 10px;
+                        padding-bottom: 4px;
+                        flex-wrap: nowrap;
+                    }
+
+                    .action-btn {
+                        min-width: max-content;
+                        white-space: nowrap;
+                        padding: 10px 16px;
+                        font-size: 0.8rem;
+                    }
+
+                    .bento-grid {
+                        grid-template-columns: 1fr;
+                        gap: 12px;
+                    }
+
+                    .bento-lg, .bento-md, .bento-sm, .bento-wide {
+                        grid-column: span 1;
+                    }
+
+                    .bento-card {
+                        border-radius: 14px;
+                        padding: 16px;
+                    }
+
+                    .bento-card-header h3 {
+                        font-size: 1rem;
+                    }
+
+                    /* Habit grid inside bento */
+                    .habit-quick-grid {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                        gap: 8px !important;
+                    }
+
+                    /* Activity heatmap: horizontal scroll */
+                    .heatmap-scroll-wrapper {
+                        overflow-x: auto;
+                        -webkit-overflow-scrolling: touch;
+                    }
+
+                    /* Streak & stats */
+                    .streak-counter {
+                        font-size: 1.4rem;
+                    }
                 }
             `}</style>
         </div>

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useProfile } from '../context/ProfileContext';
 import { useAuth } from '../context/AuthContext';
 import ProfilePopup from '../components/ProfilePopup';
 import DailyBriefingModal from '../components/DailyBriefingModal';
 import FocusRulesModal from '../components/FocusRulesModal';
 import AppreciationMessage from '../components/AppreciationMessage';
-import { Home, CheckSquare, Clock, Target, Repeat, Calendar, FileText, BookOpen, Heart, Bell, Pin, PinOff, ChevronLeft, ChevronsLeft, Wind } from 'lucide-react';
+import { Home, CheckSquare, Clock, Target, Repeat, Calendar, FileText, BookOpen, Heart, Bell, Pin, PinOff, ChevronLeft, ChevronsLeft, Wind, MoreHorizontal, Settings as SettingsIcon, User } from 'lucide-react';
 import './Layout.css';
 
 import { formatDistanceToNow, isSameDay, differenceInMinutes } from 'date-fns';
@@ -25,6 +25,7 @@ const Layout = () => {
     const { profile, updateProfile } = useProfile();
     const { currentUser } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const { timeLeft, mode, formatTime, setMode } = useTimerContext();
     const { tasks } = useTasks();
     const { goals } = useGoals();
@@ -47,6 +48,16 @@ const Layout = () => {
     const [isSidebarPinned, setIsSidebarPinned] = useState(false); // User can pin sidebar open
     const sidebarRef = useRef(null);
     const hideTimeoutRef = useRef(null);
+
+    // Mobile navigation state
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [showMoreDrawer, setShowMoreDrawer] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     // Startup Flow State: 0=check, 1=profile popup, 2=daily briefing, 3=focus rules, 4=done
     const [startupStep, setStartupStep] = useState(() => {
@@ -707,6 +718,64 @@ const Layout = () => {
                     <Outlet />
                 </div>
             </main>
+
+            {/* ===== MOBILE BOTTOM TAB BAR ===== */}
+            {isMobile && (
+                <nav className="bottom-tab-bar">
+                    <NavLink to="/" className={({ isActive }) => `tab-item ${isActive && location.pathname === '/' ? 'active' : ''}`} end>
+                        <Home />
+                        <span>Home</span>
+                    </NavLink>
+                    <NavLink to="/tasks" className={({ isActive }) => `tab-item ${isActive ? 'active' : ''}`}>
+                        <CheckSquare />
+                        <span>Tasks</span>
+                        {pendingTaskCount > 0 && <span className="tab-badge">{pendingTaskCount}</span>}
+                    </NavLink>
+                    <NavLink to="/focus" className={({ isActive }) => `tab-item ${isActive ? 'active' : ''}`}>
+                        <Clock />
+                        <span>Focus</span>
+                    </NavLink>
+                    <NavLink to="/habits" className={({ isActive }) => `tab-item ${isActive ? 'active' : ''}`}>
+                        <Repeat />
+                        <span>Habits</span>
+                        {habitsPendingCount > 0 && <span className="tab-badge">{habitsPendingCount}</span>}
+                    </NavLink>
+                    <button className={`tab-item ${showMoreDrawer ? 'active' : ''}`} onClick={() => setShowMoreDrawer(true)}>
+                        <MoreHorizontal />
+                        <span>More</span>
+                    </button>
+                </nav>
+            )}
+
+            {/* ===== MOBILE "MORE" DRAWER ===== */}
+            {isMobile && showMoreDrawer && (
+                <div className="more-drawer-overlay" onClick={() => setShowMoreDrawer(false)}>
+                    <div className="more-drawer" onClick={e => e.stopPropagation()}>
+                        <div className="more-drawer-handle" />
+                        <div className="more-drawer-grid">
+                            {[
+                                { to: '/goals', icon: <Target />, label: 'Goals' },
+                                { to: '/calendar', icon: <Calendar />, label: 'Calendar' },
+                                { to: '/notes', icon: <FileText />, label: 'Notes' },
+                                { to: '/diary', icon: <BookOpen />, label: 'Diary' },
+                                { to: '/wellness', icon: <Heart />, label: 'Wellness' },
+                                { to: '/alarms', icon: <Bell />, label: 'Alarms' },
+                                { to: '/profile', icon: <User />, label: 'Profile' },
+                                { to: '/settings', icon: <SettingsIcon />, label: 'Settings' },
+                            ].map(item => (
+                                <button
+                                    key={item.to}
+                                    className={`more-drawer-item ${location.pathname === item.to ? 'active-route' : ''}`}
+                                    onClick={() => { navigate(item.to); setShowMoreDrawer(false); }}
+                                >
+                                    {item.icon}
+                                    <span>{item.label}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Global Alarm Audio */}
             <audio ref={alarmAudioRef} loop>

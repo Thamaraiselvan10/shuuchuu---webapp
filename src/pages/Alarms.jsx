@@ -302,6 +302,41 @@ const Alarms = () => {
                     .slider {
                         background-color: #444;
                     }
+                @media (max-width: 768px) {
+                    .alarms-container {
+                        padding: 16px;
+                    }
+
+                    .alarms-header {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 16px;
+                        margin-bottom: 24px;
+                    }
+
+                    .add-alarm-btn {
+                        width: 100%;
+                    }
+
+                    .alarms-grid {
+                        grid-template-columns: 1fr;
+                        gap: 16px;
+                    }
+
+                    .alarm-widget {
+                        padding: 20px;
+                    }
+
+                    .alarm-widget.add-new {
+                        min-height: 120px;
+                        flex-direction: row;
+                        gap: 12px;
+                    }
+
+                    .add-icon {
+                        margin-bottom: 0;
+                        font-size: 2rem;
+                    }
                 }
             `}</style>
         </div>

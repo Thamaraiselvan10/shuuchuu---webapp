@@ -637,7 +637,52 @@ const Diary = () => {
                     text-align: center;
                 }
 
-                /* Dark mode media query removed to enforce Cream Paper theme */
+                /* Mobile View: Stack pages, no drag */
+                @media (max-width: 768px) {
+                    .diary-book-container {
+                        perspective: none;
+                        padding: 16px;
+                        height: auto;
+                        min-height: calc(100vh - 80px);
+                    }
+
+                    .book {
+                        width: 100%;
+                        height: auto;
+                        min-height: 80vh;
+                        box-shadow: none;
+                        transform: none !important;
+                        cursor: default !important;
+                    }
+
+                    .book-cover {
+                        flex-direction: column;
+                    }
+
+                    .book-spine {
+                        display: none;
+                    }
+
+                    .page {
+                        padding: 20px;
+                        border: none;
+                    }
+
+                    .left-page, .right-page {
+                        width: 100%;
+                        border: none;
+                        padding-right: 20px;
+                        padding-left: 20px;
+                    }
+
+                    .diary-header {
+                        margin-bottom: 12px;
+                    }
+
+                    .entries-list-styled {
+                        max-height: 300px; /* Limit list height on mobile when stacked */
+                    }
+                }
             `}</style>
     </div>
   );

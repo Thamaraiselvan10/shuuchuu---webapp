@@ -8,7 +8,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 10000;
     backdrop-filter: blur(2px);
 }
 
@@ -65,3 +65,51 @@
 }
 
 /* Dark mode overrides removed to respect app theme */
+
+/* ===== Mobile Modal: Bottom Sheet ===== */
+@media (max-width: 768px) {
+    .modal-overlay {
+        align-items: flex-end;
+    }
+
+    .modal-content {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 20px 20px 0 0;
+        max-height: 90dvh;
+        overflow-y: auto;
+        animation: modalSlideUpMobile 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    @keyframes modalSlideUpMobile {
+        from {
+            transform: translateY(100%);
+            opacity: 0.8;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .modal-header {
+        padding: 16px;
+        position: sticky;
+        top: 0;
+        background: var(--card-bg);
+        z-index: 1;
+    }
+
+    .modal-body {
+        padding: 16px;
+        padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+    }
+
+    .modal-close {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

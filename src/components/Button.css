@@ -103,3 +103,17 @@
 [data-theme='light'] .btn-ghost:hover {
     background: rgba(0, 0, 0, 0.04);
 }
+
+/* ===== Mobile Touch Targets ===== */
+@media (max-width: 768px) {
+    .btn {
+        min-height: 44px;
+        padding: 12px 20px;
+        font-size: 0.95rem;
+    }
+
+    .btn-icon {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}

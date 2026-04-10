@@ -65,7 +65,7 @@ function App() {
                                     <TasksProvider>
                                         <HabitsProvider>
                                             <AlarmManager />
-                                            <Router>
+                                            <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                                                 <NavigationHandler isMiniMode={isMiniMode} prevMiniModeRef={prevMiniModeRef} />
 
                                                 {isMiniMode ? (

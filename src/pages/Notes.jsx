@@ -273,6 +273,13 @@ const Notes = () => {
                 {isEditing ? (
                     <>
                         <div className="editor-header">
+                            <button
+                                className="mobile-only back-btn-mini"
+                                onClick={() => setIsEditing(false)}
+                                style={{ display: 'none', marginRight: '10px' }}
+                            >
+                                ←
+                            </button>
                             <Input
                                 value={editTitle}
                                 onChange={e => setEditTitle(e.target.value)}
@@ -693,6 +700,76 @@ const Notes = () => {
                 }
                 .dropdown-content button:hover {
                     background-color: rgba(255,255,255,0.1);
+                }
+
+                @media (max-width: 768px) {
+                    .notes-container {
+                        padding: 0;
+                        height: calc(100vh - 80px); /* Account for bottom nav */
+                        position: relative;
+                    }
+
+                    .notes-sidebar {
+                        width: 100%;
+                        border-radius: 0;
+                        border: none;
+                        background: var(--bg-color);
+                    }
+
+                    .notes-sidebar.hidden-mobile {
+                        display: none;
+                    }
+
+                    .note-editor {
+                        padding: 16px;
+                        border-radius: 0;
+                        border: none;
+                        background: var(--bg-color);
+                    }
+
+                    .note-editor.hidden-mobile {
+                        display: none;
+                    }
+
+                    .notes-list {
+                        padding-right: 0;
+                        margin-right: 0;
+                    }
+
+                    .note-item {
+                        border-radius: 12px;
+                        margin-bottom: 8px;
+                    }
+
+                    .search-input {
+                        font-size: 16px; /* prevent iOS zoom */
+                    }
+
+                    .editor-toolbar {
+                        overflow-x: auto;
+                        -webkit-overflow-scrolling: touch;
+                        padding: 8px;
+                        border-radius: 8px;
+                        margin-bottom: 12px;
+                    }
+
+                    .mobile-only {
+                        display: flex !important;
+                    }
+
+                    .back-btn-mini {
+                        width: 36px;
+                        height: 36px;
+                        border-radius: 10px;
+                        background: rgba(255,255,255,0.08);
+                        border: 1px solid rgba(255,255,255,0.1);
+                        color: var(--text-color);
+                        font-size: 1.1rem;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
                 }
             `}</style>
         </div>

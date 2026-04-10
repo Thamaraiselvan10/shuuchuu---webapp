@@ -289,6 +289,34 @@ const Profile = () => {
                     margin-top: 40px;
                     text-align: center;
                 }
+                @media (max-width: 768px) {
+                    .profile-page-container {
+                        padding: 16px;
+                    }
+
+                    .profile-card {
+                        padding: 20px;
+                    }
+
+                    .profile-header {
+                        flex-direction: column;
+                        gap: 16px;
+                        align-items: flex-start;
+                    }
+
+                    .user-profile-meta {
+                        align-items: flex-start;
+                    }
+
+                    .form-actions {
+                        flex-direction: column;
+                        margin-top: 24px;
+                    }
+
+                    .form-actions button {
+                        width: 100%;
+                    }
+                }
             `}</style>
         </div>
     );

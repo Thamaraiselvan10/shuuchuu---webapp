@@ -817,6 +817,64 @@ const Habits = () => {
                     font-size: 1.1rem;
                 }
 
+                @media (max-width: 768px) {
+                    .habits-container {
+                        padding: 16px;
+                    }
+
+                    .habits-header {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 16px;
+                    }
+
+                    .habits-title h1 {
+                        font-size: 1.5rem;
+                    }
+
+                    .header-actions {
+                        width: 100%;
+                    }
+
+                    .new-habit-btn {
+                        width: 100%;
+                    }
+
+                    .habits-stats-dashboard {
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 10px;
+                    }
+
+                    .stat-card {
+                        padding: 12px;
+                    }
+
+                    .stat-icon {
+                        width: 36px;
+                        height: 36px;
+                        font-size: 1.1rem;
+                    }
+
+                    .stat-value {
+                        font-size: 1.2rem;
+                    }
+
+                    .habit-grid {
+                        grid-template-columns: 1fr;
+                        gap: 12px;
+                    }
+
+                    .habit-card {
+                        padding: 16px;
+                    }
+
+                    .habit-log-btn {
+                        width: 44px;
+                        height: 44px;
+                        font-size: 1.2rem;
+                    }
+                }
+
                 @media (prefers-color-scheme: dark) {
                     .anime-select {
                         background: rgba(0,0,0,0.3);

@@ -631,8 +631,69 @@ const Calendar = () => {
                     padding-top: 15px;
                 }
 
-                @media (prefers-color-scheme: dark) {
-                    /* Removed overrides to respect app theme */
+                @media (max-width: 768px) {
+                    .anime-calendar-container {
+                        padding: 12px;
+                        border-radius: 16px;
+                    }
+
+                    .calendar-header {
+                        flex-direction: column;
+                        gap: 12px;
+                        align-items: flex-start;
+                    }
+
+                    .month-title {
+                        font-size: 1.5rem;
+                    }
+
+                    .header-actions {
+                        width: 100%;
+                        justify-content: space-between;
+                        flex-wrap: wrap;
+                    }
+
+                    .view-toggle {
+                        margin-right: 0;
+                        width: 100%;
+                        justify-content: center;
+                        margin-bottom: 8px;
+                    }
+
+                    .calendar-grid {
+                        gap: 4px;
+                    }
+
+                    .calendar-cell {
+                        padding: 4px;
+                        min-height: 60px;
+                    }
+
+                    .calendar-cell.week-cell {
+                        min-height: 120px;
+                    }
+
+                    .day-number {
+                        font-size: 0.8rem;
+                    }
+
+                    .weekday-header {
+                        font-size: 0.7rem;
+                        padding-bottom: 4px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    .mini-task-pill {
+                        font-size: 0.6rem;
+                        padding: 2px 4px;
+                        border-left-width: 2px !important;
+                    }
+                    
+                    .more-tasks {
+                        font-size: 0.6rem;
+                    }
                 }
             `}</style>
         </div>

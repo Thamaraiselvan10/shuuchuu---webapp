@@ -601,6 +601,48 @@ const Goals = () => {
                     opacity: 0.4;
                     font-size: 1.1rem;
                 }
+
+                @media (max-width: 768px) {
+                    .goals-container {
+                        padding: 16px;
+                    }
+
+                    .goals-header {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 16px;
+                    }
+
+                    .goals-title h1 {
+                        font-size: 1.5rem;
+                    }
+
+                    .header-actions {
+                        width: 100%;
+                    }
+
+                    .new-goal-btn {
+                        width: 100%;
+                    }
+
+                    .goals-stats {
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 10px;
+                    }
+
+                    .stat-card {
+                        padding: 12px;
+                    }
+
+                    .goals-grid {
+                        grid-template-columns: 1fr;
+                        gap: 12px;
+                    }
+
+                    .goal-card {
+                        padding: 16px;
+                    }
+                }
             `}</style>
         </div>
     );

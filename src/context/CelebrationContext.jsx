@@ -79,7 +79,7 @@ export const CelebrationProvider = ({ children }) => {
                           Example: src="/assets/rotating-coin.gif"
                         */}
                         <img 
-                            src="public\leetcode-leetcodecoin.gif" 
+                            src="/leetcode-leetcodecoin.gif" 
                             alt="Rotating Coin" 
                             className="celebration-coin" 
                         />
@@ -208,6 +208,39 @@ export const CelebrationProvider = ({ children }) => {
                     0% { transform: translateY(0px); }
                     50% { transform: translateY(-10px); }
                     100% { transform: translateY(0px); }
+                }
+
+                @media (max-width: 768px) {
+                    .celebration-modal {
+                        width: 100%;
+                        height: 100dvh;
+                        max-width: none;
+                        border-radius: 0;
+                        border: none;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 20px;
+                        margin: 0;
+                    }
+
+                    .celebration-coin {
+                        width: 100px;
+                        height: 100px;
+                        margin: 0 auto 20px auto;
+                    }
+
+                    .celebration-title {
+                        font-size: 1.8rem;
+                    }
+
+                    .celebration-subtitle {
+                        font-size: 1rem;
+                    }
+
+                    .celebration-quote {
+                        font-size: 1rem;
+                    }
                 }
             `}</style>
         </CelebrationContext.Provider>

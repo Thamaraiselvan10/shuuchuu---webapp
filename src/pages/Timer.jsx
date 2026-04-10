@@ -1083,6 +1083,66 @@ const FocusTime = () => {
                     width: 100%;
                     font-weight: 600;
                 }
+
+                /* ===== Mobile Timer ===== */
+                @media (max-width: 768px) {
+                    .focus-container {
+                        padding: 0 16px;
+                        height: auto;
+                        min-height: calc(100dvh - 140px);
+                        overflow-y: auto;
+                    }
+
+                    .timer-mode-tabs {
+                        gap: 6px;
+                        margin-bottom: 12px;
+                    }
+
+                    .mode-tab {
+                        padding: 8px 14px;
+                        font-size: 0.8rem;
+                    }
+
+                    .timer-glass-panel {
+                        max-width: 100%;
+                        padding: 20px 16px;
+                        border-radius: 16px;
+                    }
+
+                    .setup-view h1 {
+                        font-size: 1.3rem;
+                    }
+
+                    .duration-selector .adjust-btn {
+                        width: 48px;
+                        height: 48px;
+                    }
+
+                    .timer-circle svg,
+                    .progress-ring {
+                        width: 220px !important;
+                        height: 220px !important;
+                    }
+
+                    .drag-handle {
+                        display: none;
+                    }
+
+                    .timer-view {
+                        transform: none !important;
+                        cursor: default !important;
+                        max-width: 100% !important;
+                        padding: 20px 16px !important;
+                    }
+
+                    .timer-controls {
+                        gap: 12px;
+                    }
+
+                    .music-control-mini {
+                        margin-top: 16px !important;
+                    }
+                }
             `}</style>
         </div>
     );
