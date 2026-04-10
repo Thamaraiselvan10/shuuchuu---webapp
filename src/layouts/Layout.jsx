@@ -426,7 +426,7 @@ const Layout = () => {
             {/* Startup Flow Modals */}
             {/* Persistent Overlay for seamless transitions */}
             {startupStep < 4 && (
-                <div className="modal-overlay" style={{ zIndex: 999 }}>
+                <div className="modal-overlay" style={{ zIndex: 999, display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed', inset: 0 }}>
                     {startupStep === 0 && (
                         <div style={{
                             color: 'white',
