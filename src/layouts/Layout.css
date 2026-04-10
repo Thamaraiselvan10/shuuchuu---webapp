@@ -288,7 +288,7 @@
 
     /* Page content — leave room for bottom tabs */
     .page-content {
-        padding: 64px 16px 88px 16px !important; /* top padding for fixed header */
+        padding: 0px 16px 0px 16px !important;
         flex: 1;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
