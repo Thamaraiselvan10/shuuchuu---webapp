@@ -165,7 +165,7 @@ const Dashboard = () => {
             {/* Command Center - Hero Section */}
             <section className="command-center">
                 <div className="command-left">
-                    <div className="greeting-icon">{greetingIcon}</div>
+                    <div className="greeting-icon breath-animation">{greetingIcon}</div>
                     <div className="greeting-text">
                         <h1>{greeting}, {profile.name || 'Friend'}!</h1>
                         <p className="date-display">{format(new Date(), 'EEEE, MMMM do, yyyy')}</p>
@@ -1706,19 +1706,23 @@ const Dashboard = () => {
                         padding: 16px;
                         gap: 16px;
                         height: auto;
-                        padding-bottom: 24px;
+                        padding-bottom: 120px; /* Increased to ensure scrolling past habits card */
                     }
 
                     .command-center {
-                        flex-direction: column;
-                        gap: 16px;
-                        padding: 20px 16px;
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 12px;
+                        padding: 16px;
                         border-radius: 16px;
                         align-items: stretch;
+                        justify-items: stretch;
                     }
 
                     .command-left {
-                        gap: 10px;
+                        grid-column: 1 / -1;
+                        gap: 12px;
+                        margin-bottom: 8px;
                     }
 
                     .greeting-text h1 {
@@ -1726,17 +1730,22 @@ const Dashboard = () => {
                     }
 
                     .command-center-goal {
-                        align-self: center;
+                        width: auto;
+                        padding: 12px;
+                        flex-direction: column;
+                        text-align: center;
+                        gap: 8px;
+                        align-self: stretch;
                     }
 
                     .goal-ring svg {
-                        width: 72px;
-                        height: 72px;
+                        width: 60px;
+                        height: 60px;
                     }
 
                     .command-right {
-                        width: 100%;
-                        flex-direction: row;
+                        width: auto;
+                        flex-direction: column;
                         gap: 10px;
                     }
 
@@ -1744,6 +1753,9 @@ const Dashboard = () => {
                         flex: 1;
                         padding: 12px;
                         border-radius: 12px;
+                        flex-direction: column;
+                        gap: 8px;
+                        height: 100%;
                     }
 
                     .quick-actions {

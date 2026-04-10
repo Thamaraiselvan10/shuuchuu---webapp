@@ -530,43 +530,11 @@ const Layout = () => {
             <main className="content">
                 <header className="header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 100 }}>
 
-                    {/* Rescue Button for Stuck State */}
-                    {isRescueMode && (
-                        <button
-                            onClick={() => window.location.reload()}
-                            style={{
-                                position: 'absolute',
-                                left: '50%',
-                                top: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                zIndex: 1000,
-                                background: 'var(--primary-color)',
-                                color: 'white',
-                                border: 'none',
-                                padding: '8px 16px',
-                                borderRadius: '20px',
-                                cursor: 'pointer',
-                                fontWeight: 'bold',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                                whiteSpace: 'nowrap'
-                            }}
-                        >
-                            ⤢ Restore Full Screen
-                        </button>
-                    )}
+
 
                     {showAppreciation && <AppreciationMessage message={appreciationMessage} />}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                        {!isSidebarOpen && (
-                            <button
-                                className="sidebar-toggle-btn"
-                                onClick={() => setIsSidebarOpen(true)}
-                                title="Show Sidebar"
-                                aria-label="Show sidebar"
-                            >
-                                ☰
-                            </button>
-                        )}
+
                         {mode === 'running' && (
                             <div style={{
                                 background: 'rgba(var(--primary-rgb), 0.15)',
