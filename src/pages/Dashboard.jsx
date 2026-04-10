@@ -162,123 +162,60 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard-hub">
-            {/* Command Center - Hero Section */}
-            <section className="command-center">
-                <div className="command-left">
-                    <div className="greeting-icon breath-animation">{greetingIcon}</div>
-                    <div className="greeting-text">
-                        <h1>{greeting}, {profile.name || 'Friend'}!</h1>
-                        <p className="date-display">{format(new Date(), 'EEEE, MMMM do, yyyy')}</p>
-                    </div>
-                </div>
-
-                {/* Daily Goal Progress - Center */}
-                <div className="command-center-goal" onClick={() => { setTempGoal(dailyGoalHours); setIsEditingGoal(!isEditingGoal); }}>
-                    <div className="goal-ring">
-                        <svg viewBox="0 0 100 100">
-                            <circle className="goal-ring-bg" cx="50" cy="50" r="42" />
-                            <circle
-                                className="goal-ring-progress"
-                                cx="50" cy="50" r="42"
-                                style={{
-                                    strokeDasharray: `${2 * Math.PI * 42}`,
-                                    strokeDashoffset: `${(2 * Math.PI * 42) * (1 - progressPercent / 100)}`
-                                }}
-                            />
-                        </svg>
-                        <div className="goal-ring-value">
-                            <span className="goal-percent">{Math.round(progressPercent)}%</span>
-                            <span className="goal-label">of {dailyGoalHours}h</span>
-                        </div>
-                    </div>
-                    <div className="goal-info-text">
-                        <span className="goal-title-text">Daily Goal</span>
-                        <span className="goal-mins">{todayMinutes} mins focused</span>
-                    </div>
-
-                    {isEditingGoal && (
-                        <div className="goal-edit-popup" onClick={(e) => e.stopPropagation()}>
-                            <label>Daily Goal (Hours)</label>
-                            <input type="number" step="0.5" min="0.5" max="12" value={tempGoal} onChange={(e) => setTempGoal(e.target.value)} />
-                            <div className="popup-actions">
-                                <button className="save-btn" onClick={handleSaveGoal}>Save</button>
-                                <button className="cancel-btn" onClick={() => setIsEditingGoal(false)}>Cancel</button>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                <div className="command-right">
-                    <div className="focus-score-card">
-                        <div className="score-ring">
-                            <svg viewBox="0 0 100 100">
-                                <circle className="score-bg" cx="50" cy="50" r="45" />
-                                <circle
-                                    className="score-progress"
-                                    cx="50" cy="50" r="45"
-                                    style={{
-                                        strokeDasharray: `${2 * Math.PI * 45}`,
-                                        strokeDashoffset: `${(2 * Math.PI * 45) * (1 - focusScore / 100)}`
-                                    }}
-                                />
-                            </svg>
-                            <div className="score-value">
-                                <span className="score-number">{focusScore}</span>
-                                <span className="score-label">Score</span>
-                                <button
-                                    className="score-info-btn"
-                                    onMouseEnter={() => setShowScoreDetails(true)}
-                                    onMouseLeave={() => setShowScoreDetails(false)}
-                                    onClick={() => setShowScoreDetails(!showScoreDetails)}
-                                >
-                                    <Info size={12} />
-                                </button>
-                                {showScoreDetails && (
-                                    <div className="score-tooltip">
-                                        <h4>Focus Score Breakdown</h4>
-                                        <div className="score-breakdown">
-                                            <div className="sb-row">
-                                                <span>Focus Time:</span>
-                                                <span className="sb-val">{focusTimeScore}/40</span>
-                                            </div>
-                                            <div className="sb-row">
-                                                <span>Habits:</span>
-                                                <span className="sb-val">{habitsScore}/30</span>
-                                            </div>
-                                            <div className="sb-row">
-                                                <span>Tasks:</span>
-                                                <span className="sb-val">{tasksScore}/30</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        <div className="score-details">
-                            <div className="detail-item">
-                                <Flame size={16} />
-                                <span>{streak} day streak</span>
-                            </div>
+            {/* Minimal Command Center Header */}
+            <header className="minimal-header">
+                <div className="mh-left">
+                    <div className="mh-greeting">
+                        <div className="mh-icon-wrap">{greetingIcon}</div>
+                        <div className="mh-text">
+                            <h1>{greeting}, {profile.name || 'Friend'}!</h1>
+                            <p>{format(new Date(), 'EEEE, MMMM do')}</p>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            {/* Quick Actions Bar */}
-            <section className="quick-actions">
-                <button className="action-btn primary" onClick={handleStartFocus}>
-                    <Play size={18} /> Start Focus
-                </button>
-                <button className="action-btn" onClick={() => navigate('/tasks')}>
-                    <Plus size={18} /> New Task
-                </button>
-                <button className="action-btn" onClick={() => navigate('/goals')}>
-                    <Target size={18} /> View Goals
-                </button>
-                <button className="action-btn" onClick={() => navigate('/calendar')}>
-                    <Calendar size={18} /> Calendar
-                </button>
-            </section>
+                <div className="mh-center">
+                    <div className="mh-stat" onClick={() => { setTempGoal(dailyGoalHours); setIsEditingGoal(!isEditingGoal); }}>
+                        <Target size={20} className="mh-stat-icon goal-icon" />
+                        <div className="mh-stat-info">
+                            <span className="mh-stat-val">{Math.round(progressPercent)}% Goal</span>
+                            <span className="mh-stat-lbl">{todayMinutes} / {dailyGoalMinutes} min</span>
+                        </div>
+                        {isEditingGoal && (
+                            <div className="goal-edit-popup mh-popup" onClick={(e) => e.stopPropagation()}>
+                                <label>Daily Goal (h)</label>
+                                <input type="number" step="0.5" min="0.5" max="12" value={tempGoal} onChange={(e) => setTempGoal(e.target.value)} />
+                                <div className="popup-actions">
+                                    <button className="save-btn" onClick={handleSaveGoal}>Save</button>
+                                    <button className="cancel-btn" onClick={() => setIsEditingGoal(false)}>Cancel</button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    
+                    <div className="mh-divider"></div>
+
+                    <div className="mh-stat">
+                        <Flame size={20} className="mh-stat-icon streak-icon" />
+                        <div className="mh-stat-info">
+                            <span className="mh-stat-val">{streak} Day</span>
+                            <span className="mh-stat-lbl">Streak</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mh-right">
+                    <button className="mh-btn primary" onClick={handleStartFocus}>
+                        <Play size={16} fill="currentColor" /> Focus
+                    </button>
+                    <button className="mh-btn" onClick={() => navigate('/tasks')}>
+                        <Plus size={16} /> Task
+                    </button>
+                    <button className="mh-btn" onClick={() => navigate('/goals')}>
+                        <Target size={16} /> Goals
+                    </button>
+                </div>
+            </header>
 
             {/* Bento Grid */}
             <div className="bento-grid">
@@ -547,305 +484,100 @@ const Dashboard = () => {
                 }
                 .dashboard-hub::-webkit-scrollbar { display: none; }
 
-                /* Command Center */
-                .command-center {
+                /* Minimal Header CSS */
+                .minimal-header {
                     display: flex;
+                    align-items: center;
                     justify-content: space-between;
-                    align-items: center;
-                    background: linear-gradient(135deg, rgba(73, 136, 196, 0.15), rgba(86, 156, 214, 0.08));
-                    border: 1px solid rgba(73, 136, 196, 0.2);
-                    border-radius: 20px;
-                    padding: 28px 32px;
-                    backdrop-filter: blur(20px);
-                    animation: fadeInUp 0.5s ease-out;
-                    position: relative;
-                    z-index: 50;
-                }
-
-                @keyframes fadeInUp {
-                    from { opacity: 0; transform: translateY(20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-
-                .command-left {
-                    display: flex;
-                    align-items: center;
-                    gap: 16px;
-                }
-
-                .greeting-icon {
-                    width: 56px;
-                    height: 56px;
-                    border-radius: 16px;
-                    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                    box-shadow: 0 4px 16px rgba(73, 136, 196, 0.3);
-                }
-
-                .greeting-text h1 {
-                    font-size: 1.8rem;
-                    margin-bottom: 4px;
-                    background: linear-gradient(135deg, var(--text-color), var(--primary-color));
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    background-clip: text;
-                }
-
-                .date-display {
-                    color: var(--text-muted);
-                    font-size: 0.95rem;
-                    margin: 0;
-                }
-
-                /* Command Center Goal - Center Element */
-                .command-center-goal {
-                    display: flex;
-                    align-items: center;
-                    gap: 16px;
                     background: var(--card-bg);
-                    padding: 14px 20px;
-                    border-radius: 16px;
                     border: 1px solid var(--border-color);
-                    cursor: pointer;
-                    transition: all 0.2s ease;
-                    position: relative;
-                }
-
-                .command-center-goal:hover {
-                    border-color: var(--primary-color);
-                    box-shadow: 0 4px 16px rgba(73, 136, 196, 0.2);
-                }
-
-                .goal-ring {
-                    position: relative;
-                    width: 60px;
-                    height: 60px;
-                    flex-shrink: 0;
-                }
-
-                .goal-ring svg {
-                    transform: rotate(-90deg);
-                    width: 100%;
-                    height: 100%;
-                }
-
-                .goal-ring circle {
-                    fill: none;
-                    stroke-width: 6;
-                }
-
-                .goal-ring-bg { stroke: var(--border-color); }
-                .goal-ring-progress {
-                    stroke: var(--primary-color);
-                    stroke-linecap: round;
-                    transition: stroke-dashoffset 0.6s ease;
-                }
-
-                .goal-ring-value {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    text-align: center;
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .goal-ring-value .goal-percent {
-                    font-size: 0.95rem;
-                    font-weight: 700;
-                    color: var(--primary-color);
-                    line-height: 1;
-                }
-
-                .goal-ring-value .goal-label {
-                    font-size: 0.55rem;
-                    color: var(--text-muted);
-                }
-
-                .goal-info-text {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 2px;
-                }
-
-                .goal-title-text {
-                    font-size: 0.9rem;
-                    font-weight: 600;
-                    color: var(--text-color);
-                }
-
-                .goal-mins {
-                    font-size: 0.8rem;
-                    color: var(--text-muted);
-                }
-
-                .command-right {
-                    display: flex;
-                    align-items: center;
-                }
-
-                .focus-score-card {
-                    display: flex;
-                    align-items: center;
-                    gap: 20px;
-                    background: var(--card-bg);
+                    border-radius: 16px;
                     padding: 16px 24px;
-                    border-radius: 16px;
+                    gap: 20px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+                    animation: fadeInUp 0.5s ease-out backwards;
+                    flex-wrap: wrap;
+                    margin-bottom: 8px;
+                }
+                
+                .mh-left { flex: 1; min-width: 250px; }
+                .mh-greeting { display: flex; align-items: center; gap: 14px; }
+                .mh-icon-wrap {
+                    color: var(--primary-color);
+                    background: rgba(73, 136, 196, 0.1);
+                    padding: 12px;
+                    border-radius: 14px;
+                    display: flex;
+                }
+                .mh-text h1 { font-size: 1.25rem; font-weight: 700; color: var(--text-color); margin-bottom: 2px; }
+                .mh-text p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
+
+                .mh-center {
+                    display: flex;
+                    align-items: center;
+                    background: var(--bg-color);
                     border: 1px solid var(--border-color);
-                    position: relative;
+                    border-radius: 14px;
+                    padding: 10px 20px;
+                    gap: 20px;
                 }
+                .mh-stat { display: flex; align-items: center; gap: 12px; cursor: pointer; position: relative; }
+                .mh-stat-icon { padding: 8px; border-radius: 10px; }
+                .goal-icon { color: var(--primary-color); background: rgba(73, 136, 196, 0.15); }
+                .streak-icon { color: #ff9800; background: rgba(255, 152, 0, 0.15); }
+                .mh-stat-info { display: flex; flex-direction: column; }
+                .mh-stat-val { font-size: 1rem; font-weight: 700; color: var(--text-color); line-height: 1.1; }
+                .mh-stat-lbl { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-top: 2px; }
+                .mh-divider { width: 1px; height: 36px; background: var(--border-color); }
 
-                .score-info-btn {
+                .mh-popup {
                     position: absolute;
-                    top: -4px;
-                    right: -20px;
-                    background: none;
-                    border: none;
-                    color: var(--text-muted);
-                    cursor: pointer;
-                    opacity: 0.5;
-                    transition: opacity 0.2s;
-                }
-                .score-info-btn:hover { opacity: 1; color: var(--primary-color); }
-
-                .score-tooltip {
-                    position: absolute;
-                    top: 100%;
+                    top: 130%;
                     left: 50%;
                     transform: translateX(-50%);
-                    background: var(--card-elevated);
-                    border: 1px solid var(--border-color);
-                    padding: 12px;
-                    border-radius: 12px;
-                    width: 180px;
-                    z-index: 20;
-                    margin-top: 10px;
-                    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-                }
-
-                .score-tooltip h4 {
-                    font-size: 0.8rem;
-                    margin-bottom: 8px;
-                    color: var(--text-color);
-                    border-bottom: 1px solid var(--border-color);
-                    padding-bottom: 4px;
-                }
-
-                .sb-row {
-                    display: flex;
-                    justify-content: space-between;
-                    font-size: 0.75rem;
-                    color: var(--text-muted);
-                    margin-bottom: 4px;
-                }
-
-                .sb-val { color: var(--primary-color); font-weight: 600; }
-
-                .score-ring {
-                    position: relative;
-                    width: 70px;
-                    height: 70px;
-                }
-
-                .score-ring svg {
-                    transform: rotate(-90deg);
-                    width: 100%;
-                    height: 100%;
-                }
-
-                .score-ring circle {
-                    fill: none;
-                    stroke-width: 6;
-                }
-
-                .score-bg { stroke: var(--border-color); }
-                .score-progress {
-                    stroke: var(--primary-color);
-                    stroke-linecap: round;
-                    transition: stroke-dashoffset 0.6s ease;
-                }
-
-                .score-value {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    text-align: center;
-                }
-
-                .score-number {
-                    font-size: 1.3rem;
-                    font-weight: 700;
-                    color: var(--primary-color);
-                    display: block;
-                    line-height: 1;
-                }
-
-                .score-label {
-                    font-size: 0.65rem;
-                    color: var(--text-muted);
-                    text-transform: uppercase;
-                }
-
-                .score-details {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 8px;
-                }
-
-                .detail-item {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    font-size: 0.85rem;
-                    color: var(--text-color);
-                }
-
-                .detail-item svg { color: var(--primary-color); }
-
-                /* Quick Actions */
-                .quick-actions {
-                    display: flex;
-                    gap: 12px;
-                    flex-wrap: wrap;
-                    animation: fadeInUp 0.5s ease-out 0.1s backwards;
-                }
-
-                .action-btn {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    padding: 12px 20px;
-                    border-radius: 12px;
-                    border: 1px solid var(--border-color);
+                    z-index: 100;
+                    min-width: 220px;
                     background: var(--card-bg);
-                    color: var(--text-color);
-                    font-weight: 500;
+                    border: 1px solid var(--border-color);
+                    padding: 16px;
+                    border-radius: 12px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                }
+
+                .mh-right {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
+                .mh-btn {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 10px 18px;
+                    border-radius: 12px;
                     font-size: 0.9rem;
+                    font-weight: 600;
+                    border: 1px solid var(--border-color);
+                    background: var(--bg-color);
+                    color: var(--text-color);
                     cursor: pointer;
                     transition: all 0.2s ease;
                 }
-
-                .action-btn:hover {
-                    background: var(--card-elevated);
-                    border-color: var(--primary-color);
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-                }
-
-                .action-btn.primary {
+                .mh-btn:hover { background: var(--nav-hover-bg); border-color: var(--primary-color); }
+                .mh-btn.primary {
                     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-                    border: none;
                     color: white;
-                    box-shadow: 0 4px 16px rgba(73, 136, 196, 0.4);
+                    border: none;
+                    box-shadow: 0 4px 12px rgba(73, 136, 196, 0.3);
                 }
+                .mh-btn.primary:hover { box-shadow: 0 6px 16px rgba(73, 136, 196, 0.4); transform: translateY(-1px); }
 
-                .action-btn.primary:hover {
-                    box-shadow: 0 6px 24px rgba(73, 136, 196, 0.5);
+                @media (max-width: 900px) {
+                    .minimal-header { flex-direction: column; align-items: stretch; }
+                    .mh-left { width: 100%; }
+                    .mh-center { justify-content: center; flex-wrap: wrap; }
+                    .mh-right { justify-content: center; flex-wrap: wrap; }
+                    .mh-btn { flex: 1; justify-content: center; }
                 }
 
                 /* Quick Actions Spacer */
