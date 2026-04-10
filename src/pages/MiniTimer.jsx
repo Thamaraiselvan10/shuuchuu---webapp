@@ -32,13 +32,14 @@ const MiniTimer = () => {
     );
 
     const handleExpand = () => {
-        window.electronAPI.toggleMiniMode(false);
+        // Mini mode is Electron-only; in web app this is a no-op
+        console.log('Mini mode expand is not available in web app');
     };
 
     const togglePin = () => {
         const newState = !isPinned;
         setIsPinned(newState);
-        window.electronAPI.toggleAlwaysOnTop(newState);
+        // Always-on-top is Electron-only; no-op in browser
     };
 
     // Play success sound on completion
@@ -74,9 +75,9 @@ const MiniTimer = () => {
         }
     }, [mode]);
 
-    // Enforce Always on Top on mount
+    // Always on Top is Electron-only; no-op in browser
     React.useEffect(() => {
-        window.electronAPI.toggleAlwaysOnTop(true);
+        // window.electronAPI.toggleAlwaysOnTop not available in web
     }, []);
 
     const progress = duration > 0 ? ((duration * 60 - timeLeft) / (duration * 60)) * 100 : 0;

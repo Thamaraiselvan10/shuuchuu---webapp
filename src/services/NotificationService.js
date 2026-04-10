@@ -65,13 +65,7 @@ export const sendNotification = (title, body, icon = '🔔') => {
     }
 
     try {
-        // For Electron apps, use Electron's notification
-        if (window.electronAPI?.sendNotification) {
-            window.electronAPI.sendNotification({ title, body });
-            return null;
-        }
-
-        // For browser, use web Notification API
+        // Use web Notification API
         const notification = new Notification(title, {
             body,
             icon: '/icon.png', // Fallback icon

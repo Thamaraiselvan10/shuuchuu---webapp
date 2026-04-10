@@ -60,17 +60,20 @@ const Settings = () => {
     };
 
     const handleExport = async () => {
-        if (window.electronAPI) {
-            await window.electronAPI.invoke('db-backup');
-            alert('Backup saved!');
-        } else {
-            const data = localStorage.getItem('diary_entries');
-            const blob = new Blob([data], { type: 'application/json' });
+        try {
+            const { exportToJson } = await import('../services/db.js');
+            const data = await exportToJson();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'diary_backup.json';
+            a.download = `shuuchuu-backup-${new Date().toISOString().split('T')[0]}.json`;
             a.click();
+            URL.revokeObjectURL(url);
+            showToast('Backup exported successfully!');
+        } catch (err) {
+            console.error('Export failed:', err);
+            alert('Export failed: ' + err.message);
         }
     };
 
@@ -79,24 +82,28 @@ const Settings = () => {
     };
 
     const confirmRestore = async () => {
-        if (window.electronAPI) {
-            await window.electronAPI.invoke('db-restore');
-            alert('Data restored! Please restart the app.');
-        } else {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'application/json';
-            input.onchange = (e) => {
-                const file = e.target.files[0];
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    localStorage.setItem('diary_entries', event.target.result);
-                    alert('Data restored! Please refresh the page.');
-                };
-                reader.readAsText(file);
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/json';
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    const { importFromJson } = await import('../services/db.js');
+                    await importFromJson(data);
+                    showToast('Data restored! Refreshing...');
+                    setTimeout(() => window.location.reload(), 1500);
+                } catch (err) {
+                    console.error('Import failed:', err);
+                    alert('Import failed: ' + err.message);
+                }
             };
-            input.click();
-        }
+            reader.readAsText(file);
+        };
+        input.click();
         setRestoreModalOpen(false);
     };
 

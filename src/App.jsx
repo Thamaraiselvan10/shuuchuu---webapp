@@ -49,24 +49,9 @@ const NavigationHandler = ({ isMiniMode, prevMiniModeRef }) => {
 import { AuthProvider } from './context/AuthContext'
 
 function App() {
-    const [isMiniMode, setIsMiniMode] = React.useState(false);
+    // Mini mode is an Electron-only feature; always false in web app
+    const [isMiniMode] = React.useState(false);
     const prevMiniModeRef = React.useRef(false);
-
-    React.useEffect(() => {
-        const handleMiniModeChange = (isMini) => {
-            setIsMiniMode(isMini);
-        };
-
-        if (window.electronAPI?.onMiniModeChange) {
-            window.electronAPI.onMiniModeChange(handleMiniModeChange);
-        }
-
-        if (window.electronAPI?.getMiniMode) {
-            window.electronAPI.getMiniMode().then(isMini => {
-                setIsMiniMode(isMini);
-            });
-        }
-    }, []);
 
     return (
         <ThemeProvider>

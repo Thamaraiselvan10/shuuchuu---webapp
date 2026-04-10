@@ -1,10 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
-
-const db = window.electronAPI;
+import { dbQuery } from './db';
 
 export const taskService = {
     getAll: async () => {
-        return await db.dbQuery('SELECT * FROM tasks ORDER BY created_at DESC');
+        return await dbQuery('SELECT * FROM tasks ORDER BY created_at DESC');
     },
 
     create: async (task) => {
@@ -27,7 +26,7 @@ export const taskService = {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-        await db.dbQuery(sql, [
+        await dbQuery(sql, [
             newTask.id, newTask.title, newTask.description, newTask.category, newTask.priority, newTask.is_today_focus,
             newTask.status, newTask.due_at, newTask.estimated_minutes, newTask.created_at, newTask.updated_at
         ]);
@@ -40,12 +39,12 @@ export const taskService = {
         const values = [...Object.values(updates), new Date().toISOString(), id];
 
         const sql = `UPDATE tasks SET ${fields}, updated_at = ? WHERE id = ?`;
-        await db.dbQuery(sql, values);
+        await dbQuery(sql, values);
         return { id, ...updates };
     },
 
     delete: async (id) => {
-        await db.dbQuery('DELETE FROM tasks WHERE id = ?', [id]);
+        await dbQuery('DELETE FROM tasks WHERE id = ?', [id]);
         return { success: true };
     },
 
@@ -59,19 +58,19 @@ export const taskService = {
         } else {
             newStatus = 'pending';
         }
-        await db.dbQuery('UPDATE tasks SET status = ?, updated_at = ? WHERE id = ?', [newStatus, new Date().toISOString(), id]);
+        await dbQuery('UPDATE tasks SET status = ?, updated_at = ? WHERE id = ?', [newStatus, new Date().toISOString(), id]);
         return newStatus;
     },
 
     // Direct status update for Kanban drag-and-drop style operations
     updateStatus: async (id, newStatus) => {
-        await db.dbQuery('UPDATE tasks SET status = ?, updated_at = ? WHERE id = ?', [newStatus, new Date().toISOString(), id]);
+        await dbQuery('UPDATE tasks SET status = ?, updated_at = ? WHERE id = ?', [newStatus, new Date().toISOString(), id]);
         return newStatus;
     },
 
     // Update priority for priority column moves
     updatePriority: async (id, newPriority) => {
-        await db.dbQuery('UPDATE tasks SET priority = ?, updated_at = ? WHERE id = ?', [newPriority, new Date().toISOString(), id]);
+        await dbQuery('UPDATE tasks SET priority = ?, updated_at = ? WHERE id = ?', [newPriority, new Date().toISOString(), id]);
         return newPriority;
     }
 };

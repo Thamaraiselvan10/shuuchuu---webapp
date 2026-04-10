@@ -274,14 +274,7 @@ const FocusTime = () => {
                         <GripHorizontal size={20} />
                     </div>
 
-                    <button
-                        onClick={() => window.electronAPI.toggleMiniMode(true)}
-                        className="pin-button"
-                        aria-label="Pin timer to top"
-                        title="Pin to top (Mini Mode)"
-                    >
-                        <Pin size={16} /> Pin to top
-                    </button>
+                    {/* Pin to top / Mini Mode is an Electron-only feature — hidden in web app */}
                     <div className="timer-circle">
                         {/* Progress Ring */}
                         <svg className="progress-ring" width="280" height="280" viewBox="0 0 280 280">

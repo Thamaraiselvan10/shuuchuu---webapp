@@ -1,11 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-
-const dbQuery = async (sql, params = []) => {
-    if (window.electronAPI) {
-        return await window.electronAPI.dbQuery(sql, params);
-    }
-    return [];
-};
+import { dbQuery } from './db';
 
 export const noteService = {
     getAll: async () => {

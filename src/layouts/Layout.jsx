@@ -522,7 +522,7 @@ const Layout = () => {
                     {/* Rescue Button for Stuck State */}
                     {isRescueMode && (
                         <button
-                            onClick={() => window.electronAPI.toggleMiniMode(false)}
+                            onClick={() => window.location.reload()}
                             style={{
                                 position: 'absolute',
                                 left: '50%',

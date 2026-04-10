@@ -1,17 +1,31 @@
 import React, { useEffect, useRef } from 'react';
+import { alarmService } from '../services/alarmService';
 
 const AlarmManager = () => {
     const audioContextRef = useRef(null);
 
     useEffect(() => {
-        if (window.electronAPI) {
-            window.electronAPI.onAlarmTriggered((alarm) => {
-                console.log('Alarm triggered in renderer:', alarm);
-                playAlarmSound();
-                // We could also show a custom in-app modal here if desired
-                alert(`ALARM: ${alarm.label || 'Time is up!'}`);
-            });
-        }
+        // Register alarm callback using the browser-based alarm service
+        alarmService.onAlarmTriggered((alarm) => {
+            console.log('Alarm triggered:', alarm);
+            playAlarmSound();
+            // Show browser notification if permitted
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(`ALARM: ${alarm.label || 'Time is up!'}`, {
+                    body: `It's ${alarm.time}`,
+                    tag: 'shuuchuu-alarm',
+                    renotify: true
+                });
+            }
+            alert(`ALARM: ${alarm.label || 'Time is up!'}`);
+        });
+
+        // Start the alarm checking interval
+        alarmService.startChecking();
+
+        return () => {
+            alarmService.stopChecking();
+        };
     }, []);
 
     const playAlarmSound = () => {

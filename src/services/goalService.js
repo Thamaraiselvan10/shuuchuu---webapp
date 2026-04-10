@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-
-const db = window.electronAPI;
+import { dbQuery } from './db';
 
 export const goalService = {
     // Goals
@@ -13,7 +12,7 @@ export const goalService = {
             FROM goals g
             ORDER BY g.created_at DESC
         `;
-        return await db.dbQuery(sql);
+        return await dbQuery(sql);
     },
 
     createGoal: async (goal) => {
@@ -34,7 +33,7 @@ export const goalService = {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
-        await db.dbQuery(sql, [
+        await dbQuery(sql, [
             newGoal.id, newGoal.title, newGoal.description, newGoal.deadline,
             newGoal.category, newGoal.priority, newGoal.status,
             newGoal.created_at, newGoal.updated_at
@@ -48,18 +47,18 @@ export const goalService = {
         const values = [...Object.values(updates), new Date().toISOString(), id];
 
         const sql = `UPDATE goals SET ${fields}, updated_at = ? WHERE id = ?`;
-        await db.dbQuery(sql, values);
+        await dbQuery(sql, values);
         return { id, ...updates };
     },
 
     deleteGoal: async (id) => {
-        await db.dbQuery('DELETE FROM goals WHERE id = ?', [id]);
+        await dbQuery('DELETE FROM goals WHERE id = ?', [id]);
         return { success: true };
     },
 
     // Phases
     getPhasesByGoalId: async (goalId) => {
-        return await db.dbQuery('SELECT * FROM goal_phases WHERE goal_id = ? ORDER BY order_index ASC', [goalId]);
+        return await dbQuery('SELECT * FROM goal_phases WHERE goal_id = ? ORDER BY order_index ASC', [goalId]);
     },
 
     createPhase: async (phase) => {
@@ -81,7 +80,7 @@ export const goalService = {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
-        await db.dbQuery(sql, [
+        await dbQuery(sql, [
             newPhase.id, newPhase.goal_id, newPhase.title, newPhase.description,
             newPhase.start_date, newPhase.deadline, newPhase.status,
             newPhase.order_index, newPhase.created_at, newPhase.updated_at
@@ -95,12 +94,12 @@ export const goalService = {
         const values = [...Object.values(updates), new Date().toISOString(), id];
 
         const sql = `UPDATE goal_phases SET ${fields}, updated_at = ? WHERE id = ?`;
-        await db.dbQuery(sql, values);
+        await dbQuery(sql, values);
         return { id, ...updates };
     },
 
     deletePhase: async (id) => {
-        await db.dbQuery('DELETE FROM goal_phases WHERE id = ?', [id]);
+        await dbQuery('DELETE FROM goal_phases WHERE id = ?', [id]);
         return { success: true };
     }
 };

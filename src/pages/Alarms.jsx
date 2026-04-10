@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { alarmService } from '../services/alarmService';
 import Button from '../components/Button';
 import Modal from '../components/Modal';
 import Input from '../components/Input';
@@ -15,10 +16,8 @@ const Alarms = () => {
 
     const loadAlarms = async () => {
         try {
-            if (window.electronAPI) {
-                const result = await window.electronAPI.invoke('alarm-get');
-                setAlarms(result);
-            }
+            const result = await alarmService.getAlarms();
+            setAlarms(result);
         } catch (err) {
             console.error('Failed to load alarms', err);
         }
@@ -33,25 +32,19 @@ const Alarms = () => {
             enabled: true
         };
 
-        if (window.electronAPI) {
-            await window.electronAPI.invoke('alarm-create', alarm);
-            loadAlarms();
-        }
+        await alarmService.createAlarm(alarm);
+        loadAlarms();
         setIsModalOpen(false);
     };
 
     const handleDelete = async (id) => {
-        if (window.electronAPI) {
-            await window.electronAPI.invoke('alarm-delete', id);
-            loadAlarms();
-        }
+        await alarmService.deleteAlarm(id);
+        loadAlarms();
     };
 
     const handleToggle = async (id, enabled) => {
-        if (window.electronAPI) {
-            await window.electronAPI.invoke('alarm-toggle', { id, enabled });
-            loadAlarms();
-        }
+        await alarmService.toggleAlarm(id, enabled);
+        loadAlarms();
     };
 
     return (
