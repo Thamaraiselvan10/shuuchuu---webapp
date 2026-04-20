@@ -20,42 +20,7 @@ const FocusTime = () => {
         adjustDuration,
         setDuration,
         setMode,
-        formatTime
     } = useTimerContext();
-
-    const { settings, updateSettings } = useSettings();
-    const { isMusicEnabled, playlist, currentTrack } = settings;
-
-    // Pomodoro Mode State
-    const [timerType, setTimerType] = useState('pomodoro'); // pomodoro | shortBreak | longBreak | custom
-    const [pomodoroCount, setPomodoroCount] = useState(() => {
-        const saved = localStorage.getItem('pomodoro_count');
-        return saved ? parseInt(saved) : 0;
-    });
-    const [isLooping, setIsLooping] = useState(false);
-    const [showCustomModal, setShowCustomModal] = useState(false);
-    const [customDuration, setCustomDuration] = useState(25);
-
-    // Timer type durations
-    const timerTypes = {
-        pomodoro: { name: 'Pomodoro', duration: 25, color: '#4988C4' },
-        shortBreak: { name: 'Short Break', duration: 5, color: '#27ae60' },
-        longBreak: { name: 'Long Break', duration: 15, color: '#9b59b6' },
-        custom: { name: 'Custom', duration: customDuration, color: '#e67e22' }
-    };
-
-    const [showRulesModal, setShowRulesModal] = useState(false);
-    const [showSwitchConfirmModal, setShowSwitchConfirmModal] = useState(false);
-    const [pendingSwitchType, setPendingSwitchType] = useState(null);
-
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [isDragging, setIsDragging] = useState(false);
-    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-
-    // Save pomodoro count
-    useEffect(() => {
-        localStorage.setItem('pomodoro_count', pomodoroCount.toString());
-    }, [pomodoroCount]);
 
     // Handle timer completion for looping and pomodoro counting
     useEffect(() => {
@@ -277,27 +242,27 @@ const FocusTime = () => {
                     {/* Pin to top / Mini Mode is an Electron-only feature — hidden in web app */}
                     <div className="timer-circle">
                         {/* Progress Ring */}
-                        <svg className="progress-ring" width="280" height="280" viewBox="0 0 280 280">
+                        <svg className="progress-ring" width="140" height="140" viewBox="0 0 140 140">
                             <circle
                                 className="progress-ring__bg"
                                 stroke="rgba(255,255,255,0.1)"
-                                strokeWidth="8"
+                                strokeWidth="6"
                                 fill="transparent"
-                                r="130"
-                                cx="140"
-                                cy="140"
+                                r="62"
+                                cx="70"
+                                cy="70"
                             />
                             <circle
                                 className="progress-ring__progress"
                                 stroke="var(--primary-color)"
-                                strokeWidth="8"
+                                strokeWidth="6"
                                 fill="transparent"
-                                r="130"
-                                cx="140"
-                                cy="140"
+                                r="62"
+                                cx="70"
+                                cy="70"
                                 style={{
-                                    strokeDasharray: `${2 * Math.PI * 130}`,
-                                    strokeDashoffset: `${(timeLeft / (duration * 60)) * 2 * Math.PI * 130}`,
+                                    strokeDasharray: `${2 * Math.PI * 62}`,
+                                    strokeDashoffset: `${(timeLeft / (duration * 60)) * 2 * Math.PI * 62}`,
                                     transform: 'rotate(-90deg)',
                                     transformOrigin: 'center'
                                 }}
@@ -830,6 +795,73 @@ const FocusTime = () => {
                     justify-content: center;
                 }
 
+                @media (max-width: 768px) {
+                    .quick-presets {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 8px;
+                        margin-bottom: 18px;
+                        margin-top: 8px;
+                    }
+                    .preset-btn {
+                        flex: 1 1 0;
+                        min-width: 0;
+                        padding: 10px 0;
+                        font-size: 1rem;
+                        border-radius: 8px;
+                        border: 1px solid var(--border-color);
+                        background: var(--card-bg);
+                        color: var(--text-color);
+                        font-weight: 600;
+                        transition: background 0.2s, color 0.2s;
+                    }
+                    .preset-btn.active {
+                        background: var(--primary-color);
+                        color: #fff;
+                        border-color: var(--primary-color);
+                    }
+                }
+                    .timer-circle {
+                        width: 150px !important;
+                        height: 150px !important;
+                        margin: 18px auto 18px auto !important;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                    .progress-ring,
+                    .timer-circle svg {
+                        width: 150px !important;
+                        height: 150px !important;
+                    }
+                    .timer-inner {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        width: 90%;
+                        height: 90%;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        pointer-events: none;
+                    }
+                    .timer-time {
+                        font-size: 1.7rem !important;
+                        text-align: center;
+                        width: 100%;
+                        font-family: monospace;
+                        font-weight: bold;
+                        color: var(--text-color);
+                        line-height: 1.1;
+                        word-break: break-all;
+                        letter-spacing: 1px;
+                    }
+                }
+
                 .progress-ring {
                     position: absolute;
                     top: 0;
@@ -1088,8 +1120,12 @@ const FocusTime = () => {
                 @media (max-width: 768px) {
                     .focus-container {
                         padding: 0 16px;
-                        height: auto;
                         min-height: calc(100dvh - 140px);
+                        height: 100dvh;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
                         overflow-y: auto;
                     }
 

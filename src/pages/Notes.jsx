@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { noteService } from '../services/noteService';
 import Button from '../components/Button';
 import Input from '../components/Input';
@@ -17,6 +17,8 @@ const Notes = () => {
     });
     const editorRef = useRef(null);
     const titleInputRef = useRef(null);
+    const autoSaveTimerRef = useRef(null);
+    const [saveStatus, setSaveStatus] = useState('idle'); // 'idle' | 'unsaved' | 'saving' | 'saved'
 
     // Filter notes by search query
     const filteredNotes = useMemo(() => {
@@ -78,11 +80,59 @@ const Notes = () => {
         localStorage.setItem('note_draft', JSON.stringify({ title, content }));
     };
 
+    // Debounced auto-save to database
+    const triggerAutoSave = useCallback((title, content) => {
+        saveDraft(title, content);
+        setSaveStatus('unsaved');
+
+        // Clear any existing debounce timer
+        if (autoSaveTimerRef.current) {
+            clearTimeout(autoSaveTimerRef.current);
+        }
+
+        autoSaveTimerRef.current = setTimeout(async () => {
+            if (!title.trim()) return; // Don't save notes without a title
+
+            setSaveStatus('saving');
+            try {
+                if (selectedNote && selectedNote.id) {
+                    // Update existing note
+                    await noteService.update(selectedNote.id, { title, content });
+                } else {
+                    // Create new note, then update selectedNote with the new id
+                    const newId = await noteService.create({ title, content });
+                    setSelectedNote(prev => ({ ...prev, id: newId }));
+                    localStorage.removeItem('note_draft');
+                }
+                setSaveStatus('saved');
+                // Refresh the sidebar list
+                const data = await noteService.getAll();
+                setNotes(data);
+
+                // Reset status after a brief moment
+                setTimeout(() => setSaveStatus('idle'), 2000);
+            } catch (err) {
+                console.error('Auto-save failed:', err);
+                setSaveStatus('unsaved');
+            }
+        }, 1500);
+    }, [selectedNote]);
+
+    // Cleanup timer on unmount
+    useEffect(() => {
+        return () => {
+            if (autoSaveTimerRef.current) {
+                clearTimeout(autoSaveTimerRef.current);
+            }
+        };
+    }, []);
+
     const handleCreate = () => {
         const newNote = { id: null, title: '', content: '' };
         setSelectedNote(newNote);
         setEditTitle('');
         setIsEditing(true);
+        setSaveStatus('idle');
         if (editorRef.current) editorRef.current.innerHTML = '';
     };
 
@@ -90,10 +140,10 @@ const Notes = () => {
         setSelectedNote(note);
         setEditTitle(note.title);
         setIsEditing(true);
+        setSaveStatus('idle');
         // Small timeout to allow render
         setTimeout(() => {
             if (editorRef.current) editorRef.current.innerHTML = note.content;
-            // Don't auto-focus here to keep list browsing smooth, or maybe focus title?
         }, 0);
     };
 
@@ -282,10 +332,12 @@ const Notes = () => {
                             </button>
                             <Input
                                 value={editTitle}
-                                onChange={e => setEditTitle(e.target.value)}
+                                onChange={e => {
+                                    setEditTitle(e.target.value);
+                                    triggerAutoSave(e.target.value, editorRef.current?.innerHTML || '');
+                                }}
                                 placeholder="Note Title"
                                 onKeyDown={handleTitleKeyDown}
-                                onInput={(e) => saveDraft(e.target.value, editorRef.current?.innerHTML || '')}
                                 style={{
                                     fontSize: '1.5rem',
                                     fontWeight: 'bold',
@@ -296,7 +348,12 @@ const Notes = () => {
                                 }}
                             />
                             <div className="editor-actions">
-                                <Button onClick={handleSave} variant="primary" style={{ padding: '5px 15px', fontSize: '0.9rem' }}>Save</Button>
+                                <span className={`save-status ${saveStatus}`}>
+                                    {saveStatus === 'saving' && '⏳ Saving...'}
+                                    {saveStatus === 'saved' && '✓ Saved'}
+                                    {saveStatus === 'unsaved' && '● Unsaved'}
+                                </span>
+                                <Button onClick={handleSave} variant="primary" style={{ padding: '5px 15px', fontSize: '0.9rem' }}>Save & Close</Button>
                                 <div className="dropdown" style={{ position: 'relative', display: 'inline-block' }}>
                                     <button className="icon-btn" style={{ fontSize: '1.2rem', cursor: 'pointer', background: 'none', border: 'none', padding: '5px', color: 'var(--text-color)' }}>⋮</button>
                                     <div className="dropdown-content">
@@ -322,7 +379,7 @@ const Notes = () => {
                             className="editor-content"
                             contentEditable
                             ref={editorRef}
-                            onInput={(e) => saveDraft(editTitle, e.currentTarget.innerHTML)}
+                            onInput={(e) => triggerAutoSave(editTitle, e.currentTarget.innerHTML)}
                             placeholder="Start typing..."
                         ></div>
                     </>
@@ -555,6 +612,40 @@ const Notes = () => {
                 .editor-actions {
                     display: flex;
                     gap: 10px;
+                    align-items: center;
+                }
+
+                .save-status {
+                    font-size: 0.78rem;
+                    padding: 3px 10px;
+                    border-radius: 20px;
+                    transition: all 0.3s ease;
+                    white-space: nowrap;
+                }
+
+                .save-status.saving {
+                    color: #fbbf24;
+                    background: rgba(251, 191, 36, 0.1);
+                    animation: pulse-saving 1.2s ease-in-out infinite;
+                }
+
+                .save-status.saved {
+                    color: #34d399;
+                    background: rgba(52, 211, 153, 0.1);
+                }
+
+                .save-status.unsaved {
+                    color: #f87171;
+                    background: rgba(248, 113, 113, 0.1);
+                }
+
+                .save-status.idle {
+                    display: none;
+                }
+
+                @keyframes pulse-saving {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.5; }
                 }
 
                 .editor-toolbar {
