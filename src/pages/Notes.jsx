@@ -3,7 +3,7 @@ import { noteService } from '../services/noteService';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import Modal from '../components/Modal';
-import { Pin } from 'lucide-react';
+import { Pin, CloudUpload, CloudOff, Check } from 'lucide-react';
 
 const Notes = () => {
     const [notes, setNotes] = useState([]);
@@ -348,10 +348,14 @@ const Notes = () => {
                                 }}
                             />
                             <div className="editor-actions">
-                                <span className={`save-status ${saveStatus}`}>
-                                    {saveStatus === 'saving' && '⏳ Saving...'}
-                                    {saveStatus === 'saved' && '✓ Saved'}
-                                    {saveStatus === 'unsaved' && '● Unsaved'}
+                                <span className={`save-status ${saveStatus}`} title={
+                                    saveStatus === 'saving' ? 'Saving...' :
+                                    saveStatus === 'saved' ? 'Saved' :
+                                    saveStatus === 'unsaved' ? 'Unsaved changes' : ''
+                                }>
+                                    {saveStatus === 'saving' && <CloudUpload size={16} />}
+                                    {saveStatus === 'saved' && <Check size={16} />}
+                                    {saveStatus === 'unsaved' && <CloudOff size={16} />}
                                 </span>
                                 <Button onClick={handleSave} variant="primary" style={{ padding: '5px 15px', fontSize: '0.9rem' }}>Save & Close</Button>
                                 <div className="dropdown" style={{ position: 'relative', display: 'inline-block' }}>
